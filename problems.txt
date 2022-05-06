@@ -1,0 +1,9 @@
+1) IPS and IDS is 2 separate devices, can split them up
+2) VPN for important stuff, like the database, instead of student WIFI
+3) hacker can come in from the internet via the router, or it can come in from the WIFI. If the hacker come in from the WIFI, then he/she can steal data from database without having to pass through the IDS/IPS we setup at the firewall
+4) single point of failure for the network, as only one router so if the router dies the internet connection is down
+
+1) IPSとIDSは2つの独立した装置で、分割可能
+2) データベースなどの重要なものは、学生用WIFIの代わりにVPNを利用する
+3) ハッカーはルーターを経由してインターネットから侵入することも、WIFIから侵入することも可能です。もしハッカーがWIFIから入ってきた場合、ファイアウォールで設定したIDS/IPSを通さずに、データベースからデータを盗むことができる。
+4) ネットワークの単一障害点。ルーターが1台しかないため、ルーターが死ぬとインターネット接続が停止する。
