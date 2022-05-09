@@ -70,6 +70,24 @@
             #footer div{
                 padding: 10px;
             }
+            #postingBall{
+                height: 80px;
+                width: 80px;
+                background-color: #90ee90;
+                border-radius: 50%;
+                position: fixed;
+                right: 80px;
+                top: 500px;
+            }
+            #postingBall:hover{
+                box-shadow: 3px 3px 3px;
+                -webkit-box-shadow: 0 0 30px
+            }
+            #plusIcon{
+                margin-left: 19px;
+                margin-top: 15px;
+                color: white;
+            }
         </style>
     </head>
     <body>
@@ -87,6 +105,9 @@
             <div id="answerSection">
                 <div class="answer">Testing Answer</div>
             </div>
+        </div>
+        <div id="postingBall">
+            <a href="#"><i id="plusIcon" class="fa fa-plus fa-3x"></i></a>
         </div>
         <div id="footer">
             <div>Copyright &copy; All rights reserved</div>
