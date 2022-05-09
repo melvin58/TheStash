@@ -1,0 +1,41 @@
+#navigationBar ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #e9e9e9;
+}
+#navigationBar ul li{
+    float: left;
+}
+#navigationBar ul li{
+    display: block;
+    color: black;
+    text-align: center;
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 20px;
+    padding-left: 24px;
+}
+#navigationBar ul li a{
+    text-decoration: none;
+    padding: 20px;
+    color: black;
+}
+#navigationBar ul li a:hover{
+    background-color: #ddd;
+}
+#logo{
+    height: 100px;
+    width: 100px;
+    padding: 0px;
+}
+#profileCircle{
+    height: 100px;
+    width: 100px;
+    background-color: white;
+    border-radius: 50%;
+    margin-top: 23px;
+    margin-left: 1000px;
+}
