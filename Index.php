@@ -2,18 +2,6 @@
 <html>
     <head>
         <meta name="viewport" content="width-content-width, initial-scale=1">
-        <?php
-            $servername = "thestashdb.mysql.database.azure.com";
-            $username = "Melvin";
-            $password = "P@ssw0rd12345";
-
-            $conn = new mysqli($servername, $username, $password);
-
-            if(mysqli_connect_error){
-                die("Connection failed: ".mysqli_connect_error);
-            }
-            echo "Connected successfully";
-        ?>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://kit.fontawesome.com/bc00b134de.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
@@ -70,6 +58,7 @@
             }
             #category{
                 margin: 50px;
+                text-align: center;
             }
             #category.scrollmenu{
                 background-color: #e9e9e9;
@@ -177,53 +166,60 @@
         </style>
     </head>
     <body>
-        <div id="includedContent"></div>
-        <div id="searchBar">
-            <input type="text" id="searchInput" placeholder="Search here...">
-            <span><button type="submit"><i class="fa fa-search"></i></button></span>
-        </div>
-        <div class="container" id="topicContainer">
-            <div id="category" class="scrollmenu">
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-                <a href="#">Networking</a>
-            </div>
-            <div class="row">
-                <div id="topics" class="flex-container col-2">
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                    <div class="topics"><a href="#">Testing Topic</a></div>
-                </div>
-                <div class="questions col-7">
-                    <a href="question.php">
-                        <div class="title">Title</div>
-                        <div class="briefContent">Content Area</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div id="postingBall">
-            <a href="postQuestion.php"><i id="plusIcon" class="fa fa-plus fa-3x"></i></a>
-        </div>
-        <div id="footer">
-            <div>Copyright &copy; All rights reserved</div>
-        </div>
+        <?php
+            $servername = "thestashdb.mysql.database.azure.com";
+            $username = "Melvin";
+            $password = "P@ssw0rd12345";
+            $conn = new mysqli($servername, $username, $password);
+
+            if(mysqli_connect_error()){
+                die("Connection failed: ".mysqli_connect_error());
+            }
+            else{
+                $catQuery = "SELECT * FROM thestash.category";
+                $catQueryResult = $conn->query($catQuery);
+
+                //category array
+                // $catArray = $catQueryResult -> fetch_array(MYSQLI_ASSOC);
+                // print_r($catArray);
+                $catName = [];
+                while ($row = $catQueryResult -> fetch_array(MYSQLI_ASSOC)) {
+                    //echo $row['category_id'];
+                    $catName[] =  $row['category_name'];
+                }
+            }
+        
+        echo '<div id="includedContent"></div>';
+        echo '<div id="searchBar">';
+            echo '<input type="text" id="searchInput" placeholder="Search here...">';
+            echo '<span><button type="submit"><i class="fa fa-search"></i></button></span>';
+        echo '</div>';
+        echo '<div class="container" id="topicContainer">';
+        echo '<div id="category" class="scrollmenu">';
+        $count = 0;
+                    while ($count < count($catName)){
+                        echo '<a href="#">'. $catName[$count] .'</a>';
+                        $count++;
+                    }
+            echo '</div>';
+            echo '<div class="row">';
+                echo '<div id="topics" class="flex-container col-2">';
+                    echo '<div class="topics"><a href="#">Testing Topic</a></div>';
+                echo '</div>';
+                echo '<div class="questions col-7">';
+                    echo '<a href="question.php">';
+                        echo '<div class="title">Title</div>';
+                        echo '<div class="briefContent">Content Area</div>';
+                    echo '</a>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+        echo '<div id="postingBall">';
+            echo '<a href="postQuestion.php"><i id="plusIcon" class="fa fa-plus fa-3x"></i></a>';
+        echo'</div>';
+        echo '<div id="footer">';
+            echo '<div>Copyright &copy; All rights reserved</div>';
+        echo '</div>';
+        ?>
     </body>
 </html>
