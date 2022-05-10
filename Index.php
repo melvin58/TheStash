@@ -2,6 +2,18 @@
 <html>
     <head>
         <meta name="viewport" content="width-content-width, initial-scale=1">
+        <?php
+            $servername = "thestashdb.mysql.database.azure.com";
+            $username = "Melvin";
+            $password = "P@ssw0rd12345";
+
+            $conn = new mysqli($servername, $username, $password);
+
+            if(mysqli_connect_error){
+                die("Connection failed: ".mysqli_connect_error);
+            }
+            echo "Connected successfully";
+        ?>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://kit.fontawesome.com/bc00b134de.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
