@@ -47,20 +47,22 @@
     <body>
         <div id="includedContent"></div>
         <div id="postQuestionFormBody" class="container">
-            <h4 id="bodyHead"><b>Post a question here</b></h4>
-            <label for="questionTitle"><h5><b>Title:</b></h5></label>
-            <input type="text" id="questionTitle">
-            <br>
-            <br>
-            <label for="questionDetails"><h5><b>Question Details: </b></h5></label>
-            <textarea placeholder="Please enter the question details here" type="text" id="questionDetails" rows="4" cols="50"></textarea>
-            <br>
-            <br>
-            <label for="attachFiles"><h5><b>Attach images here:</b></h5></label>
-            <input id="attachFiles" type="file">
-            <br>
-            <br>
-            <input type="submit">
+            <form action="questionHandler.php" method="post">
+                <h4 id="bodyHead"><b>Post a question here</b></h4>
+                <label for="questionTitle"><h5><b>Title:</b></h5></label>
+                <input type="text" name="questionTitle" id="questionTitle">
+                <br>
+                <br>
+                <label for="questionDetails"><h5><b>Question Details: </b></h5></label>
+                <textarea placeholder="Please enter the question details here" type="text"name="questionDetails" id="questionDetails" rows="4" cols="50"></textarea>
+                <br>
+                <br>
+                <label for="attachFiles"><h5><b>Attach images here:</b></h5></label>
+                <input id="attachFiles" name="attachFiles type="file">
+                <br>
+                <br>
+                <input type="submit">
+            </form>
         </div>
         <div id="footer">
             <div>Copyright &copy; All rights reserved</div>

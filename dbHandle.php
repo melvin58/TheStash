@@ -26,6 +26,7 @@
             header("Location: createUser.php");
         }*/
     }
+    //lack one mroe condition for picture uploading
     else if(isset($_POST["usernameLogin"]) && isset($_POST["passwordLogin"])){
         $usernameLogin = $_POST["usernameLogin"];
         $passwordLogin = $_POST["passwordLogin"];
