@@ -1,3 +1,6 @@
+<?php 
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -188,7 +191,13 @@
                     $catName[] =  $row['category_name'];
                 }
             }
-        
+            //login status
+            if(isset($_SESSION["username"]) && isset($_SESSION["password"])){
+                $_SESSION["loginStatus"] = 'TRUE';
+            }
+            else{
+                $_SESSION["loginStatus"] = 'FALSE';
+            }
         echo '<div id="includedContent"></div>';
         echo '<div id="searchBar">';
             echo '<input type="text" id="searchInput" placeholder="Search here...">';
@@ -215,7 +224,7 @@
             echo '</div>';
         echo '</div>';
         echo '<div id="postingBall">';
-            echo '<a href="postQuestion.php"><i id="plusIcon" class="fa fa-plus fa-3x"></i></a>';
+            echo '<a href="controllerForPosting.php"><i id="plusIcon" class="fa fa-plus fa-3x"></i></a>';
         echo'</div>';
         echo '<div id="footer">';
             echo '<div>Copyright &copy; All rights reserved</div>';

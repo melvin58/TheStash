@@ -1,3 +1,6 @@
+<?php 
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -40,14 +43,22 @@
             #footer div{
                 padding: 10px;
             }
+            #userLoginBody{
+                background-color: #e9e9e9;
+                
+            }
+            #loginTitle{
+                display: block;
+                text-align: center;
+            }
         </style>
     </head>
     <body>
         <?php
             echo '<div id="includedContent"></div>';
-            echo '<div id="userCreationBody">';
+            echo '<div id="userCreationBody" class="container">';
                 echo '<h4><b id="title">User Creation</b></h4>';
-                echo '<div class="container">';
+                echo '<div class="formBody">';
                 echo '<form action="dbHandle.php" method="post">';
                     echo '<label for="profilePicture"><h5><b>Upload profile picture here: </b></h5></label>';
                     echo '<input id="profilePicture" name="profilePicture" type="file">';
@@ -63,6 +74,23 @@
                     echo '<br>';
                     echo '<button type="submit">Submit</button>';
                 echo '</form>';
+                echo '</div>';
+            echo '</div>';
+            echo '<br>';
+            echo '<div id="userLoginBody" class="container">';
+                echo '<h4><b id="loginTitle">Or Login from here</b></h4>';
+                echo '<div class="formBody">';
+                    echo '<form action="dbhandle.php" method="post">';
+                        echo '<label for="usernameLogin"><h5><b>Username: </b></h5></label>';
+                        echo '<input id="usernameLogin" name="usernameLogin" type="text">';
+                        echo '<br>';
+                        echo '<br>';
+                        echo '<label for="passwordLogin"><h5><b>Password: </b></h5></label>';
+                        echo '<input id="passwordLogin" name="passwordLogin" type="password">';
+                        echo '<br>';
+                        echo '<br>';
+                        echo '<button type="submit">Submit</button>';
+                        echo '</form>';
                 echo '</div>';
             echo '</div>';
             echo '<div id="footer">';
