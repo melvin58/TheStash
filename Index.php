@@ -100,13 +100,14 @@
             .topics a:hover{
                 background-color: #ddd;
             }
-            .questions{
+            .questionContainer{
                 background-color: #e9e9e9;
                 height: fit-content;
                 border-radius: 5px;
                 margin-left: 100px;
+                padding: 5px;
             }
-            .questions:hover{
+            .questionContainer:hover{
                 background-color: #ddd;
                 box-shadow: 5px 5px 5px;
                 -webkit-box-shadow: 0 0 10px
@@ -197,6 +198,13 @@
                 while ($row = $questionsQueryResult -> fetch_array(MYSQLI_ASSOC)){
                     $questions[] = $row;
                 }
+
+                $tagsQuery = "SELECT tag_id,tag_name FROM thestash.tags";
+                $tagsQueryResult = $conn->query($tagsQuery);
+                $tags = [];
+                while ($row = $tagsQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                    $tags[] = $row;
+                }
             }
             //login status
             if(isset($_SESSION["username"]) && isset($_SESSION["password"])){
@@ -220,18 +228,25 @@
             echo '</div>';
             echo '<div class="row">';
                 echo '<div id="topics" class="flex-container col-2">';
-                    echo '<div class="topics"><a href="#">Testing Topic</a></div>';
-                echo '</div>';
-                $count = 0;
-                while ($count < count($questions)){
-                    echo '<div class="questions">';
-                    echo '<a href="question.php">';
-                        echo '<div class="title">'. $questions[$count]['question_title'] .'</div>';
-                        echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
-                        echo '</a>';
-                    echo '</div>';
+                $count=0;
+                while ($count < count($tags)){
+                    echo '<div class="topics"><a href="#">'. $tags[$count]['tag_name'] .'</a></div>';
                     $count++;
                 }
+                echo '</div>';
+                $count = 0;
+                echo '<div class="questions col-7">';
+                while ($count < count($questions)){
+                    echo '<div class="questionContainer">';
+                        echo '<a href="question.php">';
+                            echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                            echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                            echo '</a>';
+                    echo '</div>';
+                    echo '<br>';
+                    $count++;
+                }
+                echo '</div>';
             echo '</div>';
         echo '</div>';
         echo '<div id="postingBall">';
