@@ -190,6 +190,13 @@
                     //echo $row['category_id'];
                     $catName[] =  $row['category_name'];
                 }
+
+                $questionsQuery = "SELECT question_id,question_title,question_body FROM thestash.questions_raised";
+                $questionsQueryResult = $conn->query($questionsQuery);
+                $questions = [];
+                while ($row = $questionsQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                    $questions[] = $row;
+                }
             }
             //login status
             if(isset($_SESSION["username"]) && isset($_SESSION["password"])){
@@ -198,6 +205,7 @@
             else{
                 $_SESSION["loginStatus"] = 'FALSE';
             }
+            $count = 0;
         echo '<div id="includedContent"></div>';
         echo '<div id="searchBar">';
             echo '<input type="text" id="searchInput" placeholder="Search here...">';
@@ -205,9 +213,8 @@
         echo '</div>';
         echo '<div class="container" id="topicContainer">';
         echo '<div id="category" class="scrollmenu">';
-        $count = 0;
                     while ($count < count($catName)){
-                        echo '<a href="#">'. $catName[$count] .'</a>';
+                        echo '<a href="#" class="categoryBtn">'. $catName[$count] .'</a>';
                         $count++;
                     }
             echo '</div>';
@@ -215,12 +222,16 @@
                 echo '<div id="topics" class="flex-container col-2">';
                     echo '<div class="topics"><a href="#">Testing Topic</a></div>';
                 echo '</div>';
-                echo '<div class="questions col-7">';
+                $count = 0;
+                while ($count < count($questions)){
+                    echo '<div class="questions">';
                     echo '<a href="question.php">';
-                        echo '<div class="title">Title</div>';
-                        echo '<div class="briefContent">Content Area</div>';
-                    echo '</a>';
-                echo '</div>';
+                        echo '<div class="title">'. $questions[$count]['question_title'] .'</div>';
+                        echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                        echo '</a>';
+                    echo '</div>';
+                    $count++;
+                }
             echo '</div>';
         echo '</div>';
         echo '<div id="postingBall">';
