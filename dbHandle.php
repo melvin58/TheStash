@@ -12,10 +12,11 @@
     if (isset($_POST["profilePicture"]) && isset($_POST["profilePicture"]) && isset($_POST["username"])){
         $username = $_POST["username"];
         $password = $_POST["password"];
-        $createUser = $conn->prepare("INSERT INTO thestash.users (username,`password`)VALUES (?, ?)");
+        $createUser = $conn->prepare("INSERT INTO thestash.users (username,`password`) VALUES (?, ?)");
         $createUser->bind_param("ss", $username, $password);
         $createUser->execute();
         $conn -> close();
+        $_SESSION["accountCreation"] = 'TRUE';
         header("Location: createUser.php");
         /*else if($_POST["profilePicture"] && $_POST["profilePicture"] && $_POST["username"] != null){
         
@@ -36,18 +37,21 @@
         $result = $loginUser->get_result();
         $userInfo = $result->fetch_assoc();
         
-        $_SESSION["user_id"] = $userInfo["user_id"];
-        $_SESSION["username"] = $userInfo["username"];
-        $_SESSION["password"] = $userInfo["password"];
-        if($_SESSION['username'] == null && $_SESSION['password'] == null){
-            echo "<script>alert('Wrong username or password!')</script>";
+        if($userInfo == null){
+            $_SESSION["loginFailure"] = 'TRUE';
+            $conn -> close();
             header("Location: createUser.php");
         }
-        else if($_SESSION['username'] == null || $_SESSION['password'] == null){
-            echo "<script>alert('Wrong username or password!')</script>";
+        else if($userInfo['username'] == null || $userInfo['password'] == null){
+            $_SESSION["loginFailure"] = 'TRUE';
+            $conn -> close();
             header("Location: createUser.php");
         }
         else{
+            $_SESSION["user_id"] = $userInfo["user_id"];
+            $_SESSION["username"] = $userInfo["username"];
+            $_SESSION["password"] = $userInfo["password"];
+            $conn -> close();
             header("Location: index.php");
         }
         // if($loginUser != null){

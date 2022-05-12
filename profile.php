@@ -85,7 +85,8 @@
             die("Connection failed: ".mysqli_connect_error());
         }
         else{
-            $questionsQuery = "SELECT question_id,question_title,question_body FROM thestash.questions_raised";
+            $user_id = $_SESSION["user_id"];
+            $questionsQuery = "SELECT question_id,question_title,question_body FROM thestash.questions_raised WHERE user_id_linked = $user_id";
             $questionsQueryResult = $conn->query($questionsQuery);
             $questions = [];
             while ($row = $questionsQueryResult -> fetch_array(MYSQLI_ASSOC)){
@@ -103,23 +104,28 @@
                     echo '<h5 id="username"><b>'. $_SESSION["username"] .'</b></h5>';
                     echo '<div id="userRelatedQuestions" class="col-10">';
                         echo '<h5><b>Questions posted</b></h5>';
-                        $count = 0;
-                        while ($count < count($questions)){
-                            echo '<div class="questionContainer">';
-                                echo '<a href="question.php">';
-                                    echo '<div class="questionTitle"><b>'. $questions[$count]['question_title'] .'</b></div>';
-                                    echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
-                                    echo '</a>';
-                            echo '</div>';
-                            echo '<br>';
-                            $count++;
+                        if($questions == null){
+                            echo '<div id="defaultReply">No questions posted by you yet.</div>';
+                        }
+                        else{
+                            $count = 0;
+                            while ($count < count($questions)){
+                                echo '<div class="questionContainer">';
+                                    echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
+                                        echo '<div class="questionTitle"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                                        echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                        echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                                $count++;
+                            }
                         }
                     echo '</div>';
                     echo '<div id="btnActions" class="col-2">';
-                        echo '<button id="logOutBtn">Log Out</button>';
+                    echo '<a href="logout.php"><button id="logOutBtn">Log Out</button></a>';
                         echo '<br>';
                         echo '<br>';
-                        echo '<button>Delete Account</button>';
+                        echo '<a href="deleteAccount.php"><button>Delete Account</button></a>';
                         echo '<br>';
                         echo '<br>';
                         echo '<button>Update Account Details</button>';

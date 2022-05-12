@@ -55,6 +55,17 @@
     </head>
     <body>
         <?php
+
+            if(isset($_SESSION["loginFailure"]) && $_SESSION["loginFailure"] == 'TRUE'){
+                echo "<script>alert('Wrong username or password!')</script>";
+                unset($_SESSION["loginFailure"]);
+            }
+
+            if(isset($_SESSION["accountCreation"]) && $_SESSION["accountCreation"] == 'TRUE'){
+                echo "<script>alert('Account created successfully! Enjoy using TheStash! Login to start using!')</script>";
+                unset($_SESSION["accountCreation"]);
+            }
+
             echo '<div id="includedContent"></div>';
             echo '<div id="userCreationBody" class="container">';
                 echo '<h4><b id="title">User Creation</b></h4>';

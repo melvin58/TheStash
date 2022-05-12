@@ -218,6 +218,16 @@
             else{
                 $_SESSION["loginStatus"] = 'FALSE';
             }
+
+            if(isset($_SESSION["deleteStatus"]) && $_SESSION["deleteStatus"] == "TRUE"){
+                echo "<script>alert('Account deleted successully.')</script>";
+                session_destroy();
+            }
+            else if(isset($_SESSION["deleteStatus"]) && $_SESSION["deleteStatus"] == "FALSE"){
+                echo "<script>alert('Account deletion error!')</script>";
+                unset($_SESSION["deleteStatus"]);
+            }
+
             $count = 0;
             
         echo '<div id="includedContent"></div>';
@@ -244,7 +254,7 @@
                 echo '<div class="questions col-7">';
                 while ($count < count($questions)){
                     echo '<div class="questionContainer">';
-                        echo '<a href="question.php">';
+                        echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
                             echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
                             echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
                             echo '</a>';
