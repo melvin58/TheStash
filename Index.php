@@ -206,6 +206,11 @@
                     $tags[] = $row;
                 }
             }
+            //detect if posting a question fails due to not logged in
+            if(isset($_SESSION["posting_error"])){
+                echo '<script>alert("Oops... Look like you are not logged in....")</script>';
+                unset($_SESSION["posting_error"]);
+            }
             //login status
             if(isset($_SESSION["username"]) && isset($_SESSION["password"])){
                 $_SESSION["loginStatus"] = 'TRUE';
@@ -214,6 +219,7 @@
                 $_SESSION["loginStatus"] = 'FALSE';
             }
             $count = 0;
+            
         echo '<div id="includedContent"></div>';
         echo '<div id="searchBar">';
             echo '<input type="text" id="searchInput" placeholder="Search here...">';

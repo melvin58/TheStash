@@ -12,8 +12,9 @@
     if (isset($_POST["questionTitle"]) && isset($_POST["questionDetails"]) && !(isset($_POST["attachFiles"]))){
         $questionTitle = $_POST["questionTitle"];
         $questionDetails = $_POST["questionDetails"];
-        $createUser = $conn->prepare("INSERT INTO thestash.questions_raised (question_title,question_body) VALUES (?, ?)");
-        $createUser->bind_param("ss", $questionTitle, $questionDetails);
+        $user_id = $_SESSION["user_id"];
+        $createUser = $conn->prepare("INSERT INTO thestash.questions_raised (question_title,question_body,user_id_linked) VALUES (?, ?, ?)");
+        $createUser->bind_param("sss", $questionTitle, $questionDetails, $user_id);
         if(!$createUser->execute()){
             echo '<script>alert("Error!")</script>';
         }

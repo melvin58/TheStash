@@ -30,12 +30,13 @@
     else if(isset($_POST["usernameLogin"]) && isset($_POST["passwordLogin"])){
         $usernameLogin = $_POST["usernameLogin"];
         $passwordLogin = $_POST["passwordLogin"];
-        $loginUser = $conn->prepare('SELECT username,`password` FROM thestash.users WHERE username=? and `password`=?');
+        $loginUser = $conn->prepare('SELECT `user_id`,username,`password` FROM thestash.users WHERE username=? and `password`=?');
         $loginUser->bind_param("ss", $usernameLogin, $passwordLogin);
         $loginUser->execute();
         $result = $loginUser->get_result();
         $userInfo = $result->fetch_assoc();
         
+        $_SESSION["user_id"] = $userInfo["user_id"];
         $_SESSION["username"] = $userInfo["username"];
         $_SESSION["password"] = $userInfo["password"];
         if($_SESSION['username'] == null && $_SESSION['password'] == null){
@@ -57,15 +58,4 @@
         //     };
         // }
     }
-    
-    /*$catQueryResult = $conn->query($catQuery);
-
-    //category array
-    // $catArray = $catQueryResult -> fetch_array(MYSQLI_ASSOC);
-    // print_r($catArray);
-    $catName = [];
-    while ($row = $catQueryResult -> fetch_array(MYSQLI_ASSOC)) {
-        //echo $row['category_id'];
-        $catName[] =  $row['category_name'];
-    }*/
 ?>
