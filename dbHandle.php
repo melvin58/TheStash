@@ -52,6 +52,14 @@
             $_SESSION["username"] = $userInfo["username"];
             $_SESSION["password"] = $userInfo["password"];
             $conn -> close();
+            //login status
+            if(isset($_SESSION["username"]) && isset($_SESSION["password"])){
+                $_SESSION["loginStatus"] = 'TRUE';
+                $_SESSION["confirmLogIn"] = 'TRUE';
+            }
+            else{
+                $_SESSION["loginStatus"] = 'FALSE';
+            }
             header("Location: index.php");
         }
         // if($loginUser != null){

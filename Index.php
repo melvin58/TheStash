@@ -211,13 +211,6 @@
                 echo '<script>alert("Oops... Look like you are not logged in....")</script>';
                 unset($_SESSION["posting_error"]);
             }
-            //login status
-            if(isset($_SESSION["username"]) && isset($_SESSION["password"])){
-                $_SESSION["loginStatus"] = 'TRUE';
-            }
-            else{
-                $_SESSION["loginStatus"] = 'FALSE';
-            }
 
             if(isset($_SESSION["deleteStatus"]) && $_SESSION["deleteStatus"] == "TRUE"){
                 echo "<script>alert('Account deleted successully.')</script>";
@@ -226,6 +219,11 @@
             else if(isset($_SESSION["deleteStatus"]) && $_SESSION["deleteStatus"] == "FALSE"){
                 echo "<script>alert('Account deletion error!')</script>";
                 unset($_SESSION["deleteStatus"]);
+            }
+
+            if(isset($_SESSION['confirmLogIn']) && $_SESSION["confirmLogIn"] == 'TRUE'){
+                echo "<script>alert('Login success! Welcome " . $_SESSION["username"] . "!')</script>";
+                unset($_SESSION["confirmLogIn"]);
             }
 
             $count = 0;
