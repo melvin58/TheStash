@@ -13,7 +13,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
         <script> 
             $(function(){
-                $("#includedContent").load("navbar.html"); 
+                $("#includedContent").load("navbar.php"); 
             });
         </script> 
         <style>
@@ -182,10 +182,6 @@
             else{
                 $catQuery = "SELECT * FROM thestash.category";
                 $catQueryResult = $conn->query($catQuery);
-
-                //category array
-                // $catArray = $catQueryResult -> fetch_array(MYSQLI_ASSOC);
-                // print_r($catArray);
                 $catName = [];
                 while ($row = $catQueryResult -> fetch_array(MYSQLI_ASSOC)) {
                     //echo $row['category_id'];
@@ -229,10 +225,12 @@
             $count = 0;
             
         echo '<div id="includedContent"></div>';
-        echo '<div id="searchBar">';
-            echo '<input type="text" id="searchInput" placeholder="Search here...">';
-            echo '<span><button type="submit"><i class="fa fa-search"></i></button></span>';
-        echo '</div>';
+        echo '<form action="dbhandle.php" method="get">';
+            echo '<div id="searchBar">';
+                echo '<input type="text" id="searchInput" name="search" placeholder="Search here...">';
+                echo '<span><button type="submit"><i class="fa fa-search"></i></button></span>';
+            echo '</div>';
+        echo '</form>';
         echo '<div class="container" id="topicContainer">';
         echo '<div id="category" class="scrollmenu">';
                     while ($count < count($catName)){
@@ -250,15 +248,31 @@
                 echo '</div>';
                 $count = 0;
                 echo '<div class="questions col-7">';
-                while ($count < count($questions)){
-                    echo '<div class="questionContainer">';
-                        echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
-                            echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
-                            echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
-                            echo '</a>';
-                    echo '</div>';
-                    echo '<br>';
-                    $count++;
+                if(isset($_SESSION["searchResult"])){
+                    $searchResult = $_SESSION["searchResult"];
+                    while ($count < count($searchResult)){
+                        echo '<div class="questionContainer">';
+                            echo '<a href="question.php?question='. $searchResult[$count]["question_id"] .'">';
+                                echo '<div class="title"><b>'. $searchResult[$count]['question_title'] .'</b></div>';
+                                echo '<div class="briefContent">'. $searchResult[$count]["question_body"] .'</div>';
+                                echo '</a>';
+                        echo '</div>';
+                        echo '<br>';
+                        $count++;
+                    }
+                    unset($_SESSION["searchResult"]);
+                }
+                else{
+                    while ($count < count($questions)){
+                        echo '<div class="questionContainer">';
+                            echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
+                                echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                                echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                echo '</a>';
+                        echo '</div>';
+                        echo '<br>';
+                        $count++;
+                    }
                 }
                 echo '</div>';
             echo '</div>';

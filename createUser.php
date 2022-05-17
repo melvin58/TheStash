@@ -13,7 +13,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
         <script> 
             $(function(){
-                $("#includedContent").load("navbar.html"); 
+                $("#includedContent").load("navbar.php"); 
             });
         </script>
         <style>
@@ -51,6 +51,20 @@
                 display: block;
                 text-align: center;
             }
+            .submitBtn{
+                border: none;
+                background-color: #4CAF50;
+                padding: 10px;
+                width: 100px;
+                border-radius: 5px;
+            }
+            .submitBtn:hover{
+                box-shadow: 3px 3px 3px;
+                -webkit-box-shadow: 0 0 5px
+            }
+            .btnMsg{
+                color: white;
+            }
         </style>
     </head>
     <body>
@@ -83,9 +97,10 @@
                     echo '<input id="password" name="password" type="password">';
                     echo '<br>';
                     echo '<br>';
-                    echo '<button type="submit">Submit</button>';
+                    echo '<button class="submitBtn" type="submit"><div class="btnMsg">Submit</div></button>';
                 echo '</form>';
                 echo '</div>';
+                echo "<br>";
             echo '</div>';
             echo '<br>';
             echo '<div id="userLoginBody" class="container">';
@@ -100,9 +115,10 @@
                         echo '<input id="passwordLogin" name="passwordLogin" type="password">';
                         echo '<br>';
                         echo '<br>';
-                        echo '<button type="submit">Submit</button>';
+                        echo '<button class="submitBtn" type="submit"><div class="btnMsg">Submit</div></button>';
                         echo '</form>';
                 echo '</div>';
+                echo "<br>";
             echo '</div>';
             echo '<div id="footer">';
                 echo '<div>Copyright &copy; All rights reserved</div>';
