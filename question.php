@@ -30,27 +30,30 @@
             }
             #questionTitle{
                 display: block;
-                padding: 30px;
-                padding-left: 80px;
             }
             #questionBody{
                 display: block;
-                padding: 30px;
-                padding-left: 80px;
+                
             }
-            .userWhoPosted{
-                display: block;
+            #userWhoPosted{
                 height: 80px;
                 width: 80px;
                 background-color: white;
                 border-radius: 50%;
-                margin-left: 20px;
+                margin-left: 30px;
+                
             }
             #postingUsername{
-                padding-left: 100px;
+                margin-left: 100px;
+                padding-top: 10px;
+                padding-bottom 10px;
+                white-space: nowrap;
             }
             .postingUserTags{
-                padding-left: 100px;
+                margin-left: 100px;
+                padding-top: 10px;
+                padding-bottom 10px;
+                white-space: nowrap;
             }
             .answer{
                 display: block;
@@ -108,6 +111,28 @@
                 margin-top: 15px;
                 color: white;
             }
+            #questionSection{
+                margin-top: 30px;
+                background-color: white;
+                width: fit-content;
+                margin-left: 50px;
+                padding: 20px;
+                border-radius: 5px;
+            }
+            .submitBtn{
+                border: none;
+                background-color: #4CAF50;
+                padding: 10px;
+                width: 100px;
+                border-radius: 5px;
+            }
+            .submitBtn:hover{
+                box-shadow: 3px 3px 3px;
+                -webkit-box-shadow: 0 0 5px
+            }
+            .btnMsg{
+                color: white;
+            }
         </style>
     </head>
     <body>
@@ -134,16 +159,40 @@
             }
 
             //request to retrieve related tags according to question
-            if($questions[0]["tags_related"] != null){
-                $tagQuery = 'SELECT tag_name FROM thestash.tags WHERE tag_id IN ('. $questions[0]["tags_related"] .')';
-                $tagQueryResult = $conn->query($tagQuery);
-                $tagsToQuestion = [];
-                while ($row = $tagQueryResult -> fetch_array(MYSQLI_ASSOC)){
-                    $tagsToQuestion[] = $row;
+            if($questions != null){
+                if($questions[0]["tags_related"] != null){
+                    $tagQuery = 'SELECT tag_name FROM thestash.tags WHERE tag_id IN ('. $questions[0]["tags_related"] .')';
+                    $tagQueryResult = $conn->query($tagQuery);
+                    $tagsToQuestion = [];
+                    while ($row = $tagQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                        $tagsToQuestion[] = $row;
+                    }
                 }
+                else{
+                    $tagsToQuestion = null;
+                }
+                $_SESSION["retrievalFailure"] = 'FALSE';
             }
             else{
-                $tagsToQuestion = null;
+                $questionsQuery = "SELECT question_title,question_body,tags_related,amount_of_upvotes,amount_of_downvotes,
+                username_of_posting_user FROM thestash.questions_raised WHERE question_id = $queryParam";
+                $questionsQueryResult = $conn->query($questionsQuery);
+                $questions = [];
+                while ($row = $questionsQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                    $questions[] = $row;
+                }
+                if($questions[0]["tags_related"] != null){
+                    $tagQuery = 'SELECT tag_name FROM thestash.tags WHERE tag_id IN ('. $questions[0]["tags_related"] .')';
+                    $tagQueryResult = $conn->query($tagQuery);
+                    $tagsToQuestion = [];
+                    while ($row = $tagQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                        $tagsToQuestion[] = $row;
+                    }
+                }
+                else{
+                    $tagsToQuestion = null;
+                }
+                $_SESSION["retrievalFailure"] = 'TRUE';
             }
             
             //request to retrieve related answers according to question
@@ -163,24 +212,53 @@
 
             echo '<div id="includedContent"></div>';
             echo '<div id="questionStructure" class="container">';
-            echo '<div class="userWhoPosted">';
-                echo '<div id="postingUsername">'. $questions[0]["username"] .'</div>';
-                echo '<br>';
-                $count = 0;
-                if($tagsToQuestion != null){
-                    while($count < count($tagsToQuestion)){
-                        echo '<span class="postingUserTags">'. $tagsToQuestion[$count]["tag_name"] .'</span>';
-                        $count++;
+            echo '<div>';
+                if($_SESSION["retrievalFailure"] == 'FALSE'){
+                    echo '<div id="userWhoPosted">';
+                    echo '<div id="postingUsername">'. $questions[0]["username"] .'</div>';
+                    $count = 0;
+                    if($tagsToQuestion != null){
+                        while($count < count($tagsToQuestion)){
+                            echo '<div class="postingUserTags">'. $tagsToQuestion[$count]["tag_name"] .'</div>';
+                            $count++;
+                        }
                     }
+                    else{
+                        echo '<div class="postingUserTags">No tags tagged</div>';
+                    }
+                    echo '</div>';
+                    
+                    echo '<div id="questionSection">';
+                    echo '<div id="questionTitle">';
+                        echo '<b>'.$questions[0]["question_title"].'</b>';
+                    echo '</div>';
+                    echo '<div id="questionBody">'. $questions[0]["question_body"] .'</div>';
+                    echo '</div>';
+                    unset($_SESSION["retrievalFailure"]);
                 }
                 else{
-                    echo '<span class="postingUserTags">No tags tagged</span>';
+                    echo '<div id="userWhoPosted">';
+                    echo '<div id="postingUsername">'. $questions[0]["username_of_posting_user"] .'</div>';
+                    $count = 0;
+                    if($tagsToQuestion != null){
+                        while($count < count($tagsToQuestion)){
+                            echo '<div class="postingUserTags">'. $tagsToQuestion[$count]["tag_name"] .'</div>';
+                            $count++;
+                        }
+                    }
+                    else{
+                        echo '<div class="postingUserTags">No tags tagged</div>';
+                    }
+                    echo '</div>';
+                    
+                    echo '<div id="questionSection">';
+                    echo '<div id="questionTitle">';
+                        echo '<b>'.$questions[0]["question_title"].'</b>';
+                    echo '</div>';
+                    echo '<div id="questionBody">'. $questions[0]["question_body"] .'</div>';
+                    echo '</div>';
+                    unset($_SESSION["retrievalFailure"]);
                 }
-                echo '</div>';
-            echo '<div id="questionTitle">';
-                echo '<b>'.$questions[0]["question_title"].'</b>';
-            echo '</div>';
-            echo '<div id="questionBody">'. $questions[0]["question_body"] .'</div>';
                 echo '<h5 id="divider"><b>Replies</b></h5>';
                 echo '<div id="answerSection" class="container">';
                 echo '<div class="row">';
@@ -199,18 +277,19 @@
                     }
                     echo '</div>';
                 echo '</div>';
-            echo '<div id="answerBox">';
-            echo '<h5 id="divider"><b>Type your response here</b></h5>';
-                echo '<form action="ansPosting.php" method="post">';
-                    echo '<textarea class="answerBox" placeholder="Enter here..." type="text" name="answerBox" rows="4" cols="50"></textarea>';
-                    echo '<br>';
-                    echo '<input class=answerBox name="ansPhoto" type="file">';
-                    echo '<br>';
-                    echo '<div class="answerBox"><button type="submit">Submit</button></div>';
-                    echo '<br>';
-                    echo '<br>';    
-                echo '</form>';
-            echo '</div>';
+                echo '<div id="answerBox">';
+                    echo '<h5 id="divider"><b>Type your response here</b></h5>';
+                        echo '<form action="ansPosting.php" method="post">';
+                            echo '<textarea class="answerBox" placeholder="Enter here..." type="text" name="answerBox" rows="4" cols="50"></textarea>';
+                            echo '<br>';
+                            echo '<input class=answerBox name="ansPhoto" type="file">';
+                            echo '<br>';
+                            echo '<div class="answerBox"><button class="submitBtn" type="submit"><div class="btnMsg">Submit</div></button></div>';
+                            echo '<br>';
+                            echo '<br>';    
+                        echo '</form>';
+                    echo '</div>';
+                echo '</div>';
             echo '</div>';
             echo '<div id="postingBall">';
                 echo '<a href="postQuestion.php"><i id="plusIcon" class="fa fa-plus fa-3x"></i></a>';
