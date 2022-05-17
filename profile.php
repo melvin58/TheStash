@@ -12,7 +12,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
         <script> 
             $(function(){
-                $("#includedContent").load("navbar.html"); 
+                $("#includedContent").load("navbar.php"); 
             });
         </script>
         <style>

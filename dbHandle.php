@@ -70,4 +70,15 @@
         //     };
         // }
     }
+    if(isset($_GET["search"])){
+        $searchInput = $_GET["search"];
+        $searchString = "SELECT question_id,question_title,question_body FROM thestash.questions_raised WHERE question_title LIKE '%".$searchInput."%' OR question_body LIKE '%".$searchInput."%'";
+        $search = $conn->query($searchString);
+        $searchResult = [];
+        while ($row = $search -> fetch_array(MYSQLI_ASSOC)){
+            $searchResult[] = $row;
+        }
+        $_SESSION["searchResult"] = $searchResult;
+        header("Location: index.php");
+    }
 ?>
