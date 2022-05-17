@@ -13,7 +13,6 @@
             if(isset($_POST["answerBox"])){
                 //echo print_r($_SESSION);
                 $queryParam = $_SESSION["queryParam"];
-                echo print_r($queryParam);
                 $ansBody = $_POST["answerBox"];
                 $ansPhoto = $_POST["ansPhoto"];
                 $user_id = $_SESSION["user_id"];
