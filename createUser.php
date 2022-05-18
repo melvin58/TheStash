@@ -115,7 +115,7 @@
                         echo '<input id="passwordLogin" name="passwordLogin" type="password">';
                         echo '<br>';
                         echo '<br>';
-                        echo '<button class="submitBtn" type="submit"><div class="btnMsg">Submit</div></button>';
+                        echo '<button class="submitBtn" type="submit"><div class="btnMsg">Login</div></button>';
                         echo '</form>';
                 echo '</div>';
                 echo "<br>";

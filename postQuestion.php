@@ -42,6 +42,9 @@
             #footer div{
                 padding: 10px;
             }
+            #tagContainerTitle{
+                display: Block;
+            }
         </style>
     </head>
     <body>
@@ -57,8 +60,54 @@
                 <textarea placeholder="Please enter the question details here" type="text"name="questionDetails" id="questionDetails" rows="4" cols="50"></textarea>
                 <br>
                 <br>
+                <label for="category"><h5><b>Choose a category: </b></h5></label>
+                    <select name="category">
+                    <?php
+                        $servername = "thestashdb.mysql.database.azure.com";
+                        $username = "Melvin";
+                        $password = "P@ssw0rd12345";
+                        $conn = new mysqli($servername, $username, $password);
+            
+                        if(mysqli_connect_error()){
+                            die("Connection failed: ". mysqli_connect_error());
+                        }
+                        $catQuery = "SELECT category_name FROM thestash.category";
+                        $catQueryResult = $conn->query($catQuery);
+                        $catName = [];
+                        while ($row = $catQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                            $catName[] = $row;
+                        };
+                        $count = 0;
+                        while ($count < count($catName)){
+                            echo '<option value="'. $catName[$count]["category_name"] .'">'. $catName[$count]["category_name"] .'</option>';
+                            $count++;
+                        }
+
+                        echo '</select>';
+                        echo '<br>';
+                        echo '<br>';
+                        echo '<div id="tagContainer" class="container">';
+                            echo '<h5 id="tagContainerTitle"><b>Choose a Tag</b></h5>';
+                            $tagQuery = "SELECT tag_id,tag_name FROM thestash.tags";
+                            $tagQueryResult = $conn->query($tagQuery);
+                            $tagName = [];
+                            while ($row = $tagQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                                $tagName[] = $row;
+                            }
+                            $count = 0;
+                            while ($count < count($tagName)){
+                                echo '<div>';
+                                echo '<input name="tag[]" type="checkbox" value="'. $tagName[$count]["tag_id"] .'">';
+                                echo '<label for="tag"> '.  $tagName[$count]["tag_name"] .'</label>';
+                                echo '</div>'; 
+                                $count++;
+                            }
+                        echo '</div>';
+                    ?>
+                <br>
+                <br>
                 <label for="attachFiles"><h5><b>Attach images here:</b></h5></label>
-                <input id="attachFiles" name="attachFiles type="file">
+                <input id="attachFiles" name="attachFiles" type="file">
                 <br>
                 <br>
                 <input type="submit">

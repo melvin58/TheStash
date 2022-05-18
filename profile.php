@@ -47,9 +47,6 @@
                 margin-top: 50px;
                 padding: 50px;
             }
-            #btnActions button{
-                margin: auto;
-            }
             #username{
                 margin-top: 20px;
                 margin-bottom: 20px;
@@ -73,26 +70,36 @@
             }
             .questionTitle{
                 padding-bottom: 20px;
+            }#userRelatedQuestions{
+                margin-bottom: 30px;
             }
         </style>
         <?php 
-        $servername = "thestashdb.mysql.database.azure.com";
-        $username = "Melvin";
-        $password = "P@ssw0rd12345";
-        $conn = new mysqli($servername, $username, $password);
+            $servername = "thestashdb.mysql.database.azure.com";
+            $username = "Melvin";
+            $password = "P@ssw0rd12345";
+            $conn = new mysqli($servername, $username, $password);
 
-        if(mysqli_connect_error()){
-            die("Connection failed: ".mysqli_connect_error());
-        }
-        else{
+            if(mysqli_connect_error()){
+                die("Connection failed: ".mysqli_connect_error());
+            }
+        
             $user_id = $_SESSION["user_id"];
+
             $questionsQuery = "SELECT question_id,question_title,question_body FROM thestash.questions_raised WHERE user_id_linked = $user_id";
             $questionsQueryResult = $conn->query($questionsQuery);
             $questions = [];
             while ($row = $questionsQueryResult -> fetch_array(MYSQLI_ASSOC)){
                 $questions[] = $row;
+
             }
-        }
+            
+            $ansQuery = "SELECT questions_raised.question_title,questions_raised.question_id,answers_given.answer_body FROM thestash.answers_given INNER JOIN thestash.questions_raised ON answers_given.question_id_linked = questions_raised.question_id where answers_given.user_linked_to = $user_id";
+            $ansQueryResult = $conn->query($ansQuery);
+            $answers = [];
+            while ($row = $ansQueryResult -> fetch_array(MYSQLI_ASSOC)){
+                $answers[] = $row;
+            }
         ?>
     </head>
     <body>
@@ -114,6 +121,26 @@
                                     echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
                                         echo '<div class="questionTitle"><b>'. $questions[$count]['question_title'] .'</b></div>';
                                         echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                        echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                                $count++;
+                            }
+                        }
+                    echo '</div>';
+                    
+                    echo '<div id="userRelatedAnswers" class="col-10">';
+                        echo '<h5><b>Answers posted</b></h5>';
+                        if($answers == null){
+                            echo '<div id="defaultReply">No questions posted by you yet.</div>';
+                        }
+                        else{
+                            $count = 0;
+                            while ($count < count($answers)){
+                                echo '<div class="questionContainer">';
+                                    echo '<a href="question.php?question='. $answers[$count]["question_id"] .'">';
+                                        echo '<div class="questionTitle"><b>'. $answers[$count]['question_title'] .'</b></div>';
+                                        echo '<div class="briefContent">'. $answers[$count]["answer_body"] .'</div>';
                                         echo '</a>';
                                 echo '</div>';
                                 echo '<br>';
