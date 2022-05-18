@@ -60,22 +60,26 @@
                 margin-top: 50px;
             }
             #category{
-                margin: 50px;
+                
                 text-align: center;
             }
             #category.scrollmenu{
                 background-color: #e9e9e9;
                 overflow: auto;
                 white-space: nowrap;
+                padding: 10px;
+                width: fit-content;
+                margin: auto;
             }
-            #category.scrollmenu a{
+            #category.scrollmenu form button{
                 display: inline-block;
                 text-align: center;
                 padding: 14px;
                 text-decoration: none;
                 color: black;
+                border: none;
             }
-            #category.scrollmenu a:hover{
+            #category.scrollmenu form button:hover{
                 background-color: #ddd;
             }
             #topics{
@@ -91,13 +95,15 @@
             }
             .topics{
                 margin: 20px auto;
+                border: none;
+                padding: 20px;
+               
             }
             .topics a{
                 text-decoration: none;
                 color: black;
-                padding: 20px;
             }
-            .topics a:hover{
+            .topics:hover{
                 background-color: #ddd;
             }
             .questionContainer{
@@ -110,7 +116,7 @@
             .questionContainer:hover{
                 background-color: #ddd;
                 box-shadow: 5px 5px 5px;
-                -webkit-box-shadow: 0 0 10px
+                -webkit-box-shadow: 0 0 10px;
             }
             .questions a{
                 text-decoration: none;
@@ -160,7 +166,7 @@
             }
             #postingBall:hover{
                 box-shadow: 3px 3px 3px;
-                -webkit-box-shadow: 0 0 30px
+                -webkit-box-shadow: 0 0 30px;
             }
             #plusIcon{
                 margin-left: 19px;
@@ -177,36 +183,35 @@
             $conn = new mysqli($servername, $username, $password);
 
             if(mysqli_connect_error()){
-                die("Connection failed: ".mysqli_connect_error());
+                die("Connection failed: ". mysqli_connect_error());
             }
             else{
-                $catQuery = "SELECT * FROM thestash.category";
+                $catQuery = "SELECT category_id,category_name FROM thestash.category";
                 $catQueryResult = $conn->query($catQuery);
                 $catName = [];
                 while ($row = $catQueryResult -> fetch_array(MYSQLI_ASSOC)) {
-                    //echo $row['category_id'];
-                    $catName[] =  $row['category_name'];
-                }
+                    $catName[] =  $row;
+                };
 
-                $questionsQuery = "SELECT question_id,question_title,question_body FROM thestash.questions_raised";
+                $questionsQuery = "SELECT question_id,question_title,question_body,tags_related,category_under FROM thestash.questions_raised";
                 $questionsQueryResult = $conn->query($questionsQuery);
                 $questions = [];
                 while ($row = $questionsQueryResult -> fetch_array(MYSQLI_ASSOC)){
                     $questions[] = $row;
-                }
+                };
 
-                $tagsQuery = "SELECT tag_id,tag_name FROM thestash.tags";
+                $tagsQuery = "SELECT tag_id,tag_name,category_belonged_to FROM thestash.tags";
                 $tagsQueryResult = $conn->query($tagsQuery);
                 $tags = [];
                 while ($row = $tagsQueryResult -> fetch_array(MYSQLI_ASSOC)){
                     $tags[] = $row;
-                }
-            }
+                };
+            };
             //detect if posting a question fails due to not logged in
             if(isset($_SESSION["posting_error"])){
                 echo '<script>alert("Oops... Look like you are not logged in....")</script>';
                 unset($_SESSION["posting_error"]);
-            }
+            };
 
             if(isset($_SESSION["deleteStatus"]) && $_SESSION["deleteStatus"] == "TRUE"){
                 echo "<script>alert('Account deleted successully.')</script>";
@@ -215,14 +220,12 @@
             else if(isset($_SESSION["deleteStatus"]) && $_SESSION["deleteStatus"] == "FALSE"){
                 echo "<script>alert('Account deletion error!')</script>";
                 unset($_SESSION["deleteStatus"]);
-            }
+            };
 
             if(isset($_SESSION['confirmLogIn']) && $_SESSION["confirmLogIn"] == 'TRUE'){
                 echo "<script>alert('Login success! Welcome " . $_SESSION["username"] . "!')</script>";
                 unset($_SESSION["confirmLogIn"]);
-            }
-
-            $count = 0;
+            };
             
         echo '<div id="includedContent"></div>';
         echo '<form action="dbhandle.php" method="get">';
@@ -232,46 +235,155 @@
             echo '</div>';
         echo '</form>';
         echo '<div class="container" id="topicContainer">';
-        echo '<div id="category" class="scrollmenu">';
+        echo '<div id="category" class="scrollmenu row">';
+                    $count = 0;
                     while ($count < count($catName)){
-                        echo '<a href="#" class="categoryBtn">'. $catName[$count] .'</a>';
+                        echo '<form class="col-4" action="index.php" method="get">';
+                            echo '<button type="submit" class="categoryBtn">'. $catName[$count]["category_name"] .'</button>';
+                            echo '<input type="hidden" name="catId" value="'. $catName[$count]["category_id"] .'">';
+                        echo '</form>';
                         $count++;
                     }
             echo '</div>';
-            echo '<div class="row">';
-                echo '<div id="topics" class="flex-container col-2">';
-                $count=0;
-                while ($count < count($tags)){
-                    echo '<div class="topics"><a href="#">'. $tags[$count]['tag_name'] .'</a></div>';
-                    $count++;
-                }
-                echo '</div>';
-                $count = 0;
-                echo '<div class="questions col-7">';
-                if(isset($_SESSION["searchResult"])){
-                    $searchResult = $_SESSION["searchResult"];
-                    while ($count < count($searchResult)){
-                        echo '<div class="questionContainer">';
-                            echo '<a href="question.php?question='. $searchResult[$count]["question_id"] .'">';
-                                echo '<div class="title"><b>'. $searchResult[$count]['question_title'] .'</b></div>';
-                                echo '<div class="briefContent">'. $searchResult[$count]["question_body"] .'</div>';
-                                echo '</a>';
-                        echo '</div>';
-                        echo '<br>';
+            echo '<br>';
+                if(isset($_GET["catId"])){
+                    echo '<div class="row">';
+                    echo '<div id="topics" class="flex-container col-2">';
+                    $count=0;
+                    $catId = $_GET["catId"];
+                    while ($count < count($tags)){
+                        if(in_array($catId, $tags[$count])){
+                            echo '<form action="index.php" method="get">';
+                                echo '<button type="submit" class="topics">'. $tags[$count]['tag_name'] .'</button>';
+                                echo '<input type="hidden" name="catId" value="'. $catId .'">';
+                                echo '<input type="hidden" name="tagId" value="'. $tags[$count]['tag_id'] .'">';
+                            echo '</form>';
+                        }
                         $count++;
                     }
-                    unset($_SESSION["searchResult"]);
+                    echo '</div>';
+                    echo '<div class="questions col-7">';
+                    if(isset($_GET["tagId"])){
+                        $count = 0;
+                        $tagId = $_GET["tagId"];
+                        while ($count < count($questions)){
+                            $tagIdInQuestion = explode(',',$questions[$count]["tags_related"]);
+                            if(in_array($tagId, $tagIdInQuestion)){
+                                echo '<div class="questionContainer">';
+                                echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
+                                    echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                                    echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                    echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                            }
+                            $count++;
+                        }
+                    }
+                    else{
+                        if(isset($_SESSION["searchResult"])){
+                            $count = 0;
+                            $searchResult = $_SESSION["searchResult"];
+                            while ($count < count($searchResult)){
+                                echo '<div class="questionContainer">';
+                                    echo '<a href="question.php?question='. $searchResult[$count]["question_id"] .'">';
+                                        echo '<div class="title"><b>'. $searchResult[$count]['question_title'] .'</b></div>';
+                                        echo '<div class="briefContent">'. $searchResult[$count]["question_body"] .'</div>';
+                                        echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                                $count++;
+                            }
+                            unset($_SESSION["searchResult"]);
+                        }
+                        else{
+                            //echo print_r($tags);
+                            //echo print_r($tags);
+                            $tagIdInQuestion = explode(',',$questions[0]["tags_related"]);
+                            //echo in_array($tags[3]["tag_id"], $tagIdInQuestion);
+                            $count = 0;
+                            while ($count < count($questions)){
+                                if($catId == $questions[$count]["category_under"]){
+                                    echo '<div class="questionContainer">';
+                                    echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
+                                        echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                                        echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                        echo '</a>';
+                                    echo '</div>';
+                                    echo '<br>';
+                                }
+                                $count++;
+                            }
+                            /*while ($count < count($questions)){
+                                echo '<div class="questionContainer">';
+                                    echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
+                                        echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                                        echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                        echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                                $count++;
+                            }*/
+                        }
+                    }
                 }
                 else{
-                    while ($count < count($questions)){
-                        echo '<div class="questionContainer">';
-                            echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
-                                echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
-                                echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
-                                echo '</a>';
-                        echo '</div>';
-                        echo '<br>';
+                    echo '<div class="row">';
+                    echo '<div id="topics" class="flex-container col-2">';
+                    $count = 0;
+                    while ($count < count($tags)){
+                        echo '<form action="index.php" method="get">';
+                            echo '<button type="submit" class="topics">'. $tags[$count]['tag_name'] .'</button>';
+                            echo '<input type="hidden" name="tagId" value="'. $tags[$count]['tag_id'] .'">';
+                        echo '</form>';
                         $count++;
+                    }
+                    echo '</div>';
+                    $count = 0;
+                    echo '<div class="questions col-7">';
+                    if(isset($_GET["tagId"])){
+                        $tagId = $_GET["tagId"];
+                        while ($count < count($questions)){
+                            $tagIdInQuestion = explode(',',$questions[$count]["tags_related"]);
+                            if(in_array($tagId, $tagIdInQuestion)){
+                                echo '<div class="questionContainer">';
+                                echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
+                                    echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                                    echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                    echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                            }
+                            $count++;
+                        }
+                    }
+                    else{
+                        if(isset($_SESSION["searchResult"])){
+                            $searchResult = $_SESSION["searchResult"];
+                            while ($count < count($searchResult)){
+                                echo '<div class="questionContainer">';
+                                    echo '<a href="question.php?question='. $searchResult[$count]["question_id"] .'">';
+                                        echo '<div class="title"><b>'. $searchResult[$count]['question_title'] .'</b></div>';
+                                        echo '<div class="briefContent">'. $searchResult[$count]["question_body"] .'</div>';
+                                        echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                                $count++;
+                            }
+                            unset($_SESSION["searchResult"]);
+                        }
+                        else{
+                            while ($count < count($questions)){
+                                echo '<div class="questionContainer">';
+                                    echo '<a href="question.php?question='. $questions[$count]["question_id"] .'">';
+                                        echo '<div class="title"><b>'. $questions[$count]['question_title'] .'</b></div>';
+                                        echo '<div class="briefContent">'. $questions[$count]["question_body"] .'</div>';
+                                        echo '</a>';
+                                echo '</div>';
+                                echo '<br>';
+                                $count++;
+                            }
+                        }
                     }
                 }
                 echo '</div>';

@@ -81,4 +81,7 @@
         $_SESSION["searchResult"] = $searchResult;
         header("Location: index.php");
     }
+    if(isset($_GET["tagName"])){
+        echo "yes";
+    }
 ?>
