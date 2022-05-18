@@ -71,7 +71,7 @@
                         if(mysqli_connect_error()){
                             die("Connection failed: ". mysqli_connect_error());
                         }
-                        $catQuery = "SELECT category_name FROM thestash.category";
+                        $catQuery = "SELECT category_id,category_name FROM thestash.category";
                         $catQueryResult = $conn->query($catQuery);
                         $catName = [];
                         while ($row = $catQueryResult -> fetch_array(MYSQLI_ASSOC)){
