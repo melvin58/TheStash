@@ -79,7 +79,7 @@
                         };
                         $count = 0;
                         while ($count < count($catName)){
-                            echo '<option value="'. $catName[$count]["category_name"] .'">'. $catName[$count]["category_name"] .'</option>';
+                            echo '<option value="'. $catName[$count]["category_id"] .'">'. $catName[$count]["category_name"] .'</option>';
                             $count++;
                         }
 
